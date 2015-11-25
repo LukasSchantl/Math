@@ -44,12 +44,6 @@ public:
 };
 
 
-//template<typename T>
-//static class IdentityMatrix_t
-//{
-//
-//};
-
 template<typename T, uint32_t max_n, uint32_t max_m>
 class Matrix_t
 {
@@ -129,12 +123,7 @@ private:
 
     Matrix_t<T,max_m, max_n> psuedoInvert ()
 	{
-    	Matrix_t<T,maxDimension_,maxDimension_> intermediate = (*this).transpose() * (*this);
-    	std::cout << intermediate << std::endl;
-    	Matrix_t<T,maxDimension_,maxDimension_> intermediateInv = intermediate.invert();
-    	std::cout << intermediateInv << std::endl;
-
-    	return intermediateInv * (*this).transpose();
+    	return ((*this).transpose() * (*this)).invert() * (*this).transpose();
 	}
 
 protected:
