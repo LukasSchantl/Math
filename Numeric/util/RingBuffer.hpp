@@ -70,7 +70,9 @@ public:
 
 	T back () const
 	{
-		return data_[(inPtr_-1)%maxSize];
+		if(inPtr_)
+			return data_[inPtr_-1];
+		return data_[maxSize-1];
 	}
 
 	bool empty () const
@@ -83,18 +85,14 @@ public:
 		if(empty_)
 			return 0;
 
+		if(outPtr_ == inPtr_)
+			return maxSize;
+
 		if(outPtr_ < inPtr_)
-		{
 			return inPtr_ - outPtr_;
-		}
-		else if(outPtr_ > inPtr_)
-		{
-			return maxSize - outPtr_ + inPtr_;
-		}
-		else
-		{
-			return 0;
-		}
+
+		return maxSize - outPtr_ + inPtr_;
+
 	}
 
 	size_t max_size () const
@@ -134,15 +132,31 @@ public:
 		stream << "Size: " << rb.size() << std::endl;
 		for(uint32_t i = 0; i < maxSize; i++)
 		{
-			if((rb.outPtr_ + i)%maxSize < rb.inPtr_)
-				stream << i << "\t" << rb.data_[i];
+			if(rb.empty_)
+			{
+				std::cout << "invalid";
+			}
+			else if(rb.inPtr_ == rb.outPtr_)
+			{
+				std::cout << rb.data_[i];
+			}
+			else if(rb.inPtr_ > rb.outPtr_ && i < rb.inPtr_ && i >= rb.outPtr_)
+			{
+				std::cout << rb.data_[i];
+			}
+			else if(rb.inPtr_ < rb.outPtr_ && (i >= rb.outPtr_ || i < rb.inPtr_))
+			{
+				std::cout << rb.data_[i];
+			}
 			else
-				stream << i << "\t" << "invalid";
+			{
+				std::cout << "invalid";
+			}
 			if(i == rb.inPtr_)
 				stream << "\t<-- insert position";
 			if(i == rb.outPtr_)
 				stream << "\t<-- front";
-			if(i == (rb.inPtr_-1)%maxSize)
+			if(i == (rb.inPtr_==0 ? maxSize-1:(rb.inPtr_-1)))
 				stream << "\t<-- back";
 			stream << std::endl;
 		}

@@ -37,6 +37,8 @@ public:
 
 	}
 
+
+
 	T& operator[](uint32_t i) throw(DimensionException)
 	{
 		if(i < this->n_)
