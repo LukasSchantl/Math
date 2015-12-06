@@ -9,20 +9,19 @@
 #define MATH_NUMERIC_REGRESSION_REGRESSION_HPP_
 
 #include <stdint.h>
-#include "../basic/vector.hpp"
+#include <stdexcept>
 
 
-template<typename T, uint32_t maxSamples, typename CoeffType>
+template<typename T, uint32_t maxSamples>
 class RegressionBase_t
 {
-public:
-	typedef CoeffType coeffType_t;
-
 protected:
 	ColumnVector_t<T, maxSamples> x_;
 	ColumnVector_t<T, maxSamples> y_;
 
 	virtual void update () = 0;
+
+	virtual std::ostream& print (std::ostream &stream) const = 0;
 public:
 
 	template<uint32_t n>
@@ -50,9 +49,13 @@ public:
 
 	}
 
-	virtual const CoeffType& getCoeffs () const = 0;
-
 	virtual T getY (T& x) const = 0;
+
+    friend std::ostream& operator<< (std::ostream& stream, const RegressionBase_t<T,maxSamples>& reg)
+    {
+
+    	return reg.print(stream);
+    }
 };
 
 

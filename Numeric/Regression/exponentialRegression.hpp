@@ -11,10 +11,10 @@
 #include "regression.hpp"
 #include <cmath>
 template<typename T, uint32_t maxSamples>
-class ExponentialRegression_t : public RegressionBase_t<T, maxSamples,ColumnVector_t<T,2> >
+class ExponentialRegression_t : public RegressionBase_t<T, maxSamples>
 {
 private:
-	typedef RegressionBase_t<T, maxSamples,ColumnVector_t<T,2> > baseType_t;
+	typedef RegressionBase_t<T, maxSamples> baseType_t;
 
 	ColumnVector_t<T,2> coeffs_;
 
@@ -46,6 +46,12 @@ private:
 
 		std::cout << "coeffs_ = \n" << coeffs_ << std::endl;
 	}
+
+	virtual std::ostream& print (std::ostream &stream) const
+	{
+		stream << coeffs_[0] << " * exp( "  << coeffs_[1] << " * x)";
+		return stream;
+	}
 public:
 
 	template<uint32_t n>
@@ -55,9 +61,9 @@ public:
 		update();
 	}
 
-	virtual const typename baseType_t::coeffType_t& getCoeffs () const
+	virtual ~ExponentialRegression_t()
 	{
-		return coeffs_;
+
 	}
 
 	virtual T getY (T& x) const

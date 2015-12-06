@@ -14,11 +14,11 @@
 
 
 template<typename T, uint32_t order, uint32_t maxSamples>
-class PolynomialRegression_t : public RegressionBase_t<T,maxSamples,ColumnVector_t<T, order+1> >
+class PolynomialRegression_t : public RegressionBase_t<T,maxSamples >
 {
 private:
 
-	typedef RegressionBase_t<T,maxSamples,ColumnVector_t<T, order+1> > baseType_t;
+	typedef RegressionBase_t<T,maxSamples > baseType_t;
 	ColumnVector_t<T, order+1> coeffs_;
 
 	virtual void update ()
@@ -49,6 +49,14 @@ private:
 		coeffs_ = (A.transpose()*A).inverse()*A.transpose()*baseType_t::y_;
 
 		std::cout << "coeffs_ = \n" << coeffs_ << std::endl;
+	}
+
+	virtual std::ostream& print (std::ostream &stream) const
+	{
+		stream << coeffs_[0];
+		for(uint32_t i = 1; i < order+1; i++)
+			stream << " + " << coeffs_[i] << " * x^" << i;
+		return stream;
 	}
 
 public:
@@ -84,11 +92,6 @@ public:
 		return result;
 	}
 
-
-	virtual const typename baseType_t::coeffType_t& getCoeffs () const
-	{
-		return coeffs_;
-	}
 };
 
 
